@@ -1,0 +1,86 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+repositories {
+    jcenter()
+}
+
+mainClassName = 'bank.gui.Client'
+
+sourceCompatibility = 11
+targetCompatibility = 11
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
+
+def currentOS = org.gradle.internal.os.OperatingSystem.current()
+def platform
+if (currentOS.isWindows()) {
+    platform = 'win'
+} else if (currentOS.isLinux()) {
+    platform = 'linux'
+} else if (currentOS.isMacOsX()) {
+    platform = 'mac'
+}
+
+dependencies {
+    compile "org.openjfx:javafx-base:11:${platform}"
+    compile "org.openjfx:javafx-graphics:11:${platform}"
+    compile "org.openjfx:javafx-controls:11:${platform}"
+    compile "org.openjfx:javafx-swing:11:${platform}"
+
+}
+
+dependencies {
+    compile 'junit:junit:4.12'
+}
+
+dependencies {
+    compile  "org.apache.tomcat.embed:tomcat-embed-core:9.0.16"
+    compile  "org.apache.tomcat.embed:tomcat-embed-jasper:9.0.16"
+    compile "javax.portlet:portlet-api:3.0.1"
+
+}
+
+dependencies {
+    // JAXB
+    compile 'com.sun.xml.bind:jaxb-core:2.3.0.1'
+    compile 'javax.xml.bind:jaxb-api:2.3.1'
+    compile 'com.sun.xml.bind:jaxb-impl:2.3.2'
+
+    // XStream
+    compile 'com.thoughtworks.xstream:xstream:1.4.11.1'
+
+    // Java Spark
+    compile 'com.sparkjava:spark-core:2.8.0'
+    compile 'org.slf4j:slf4j-simple:1.7.26'
+
+    // Javalin
+    compile 'io.javalin:javalin:2.7.0'
+
+    // GSon
+    compile 'com.google.code.gson:gson:2.8.5'
+
+    // Jersey mapping for JDK Http Contaier 
+    compile 'org.glassfish.jersey.containers:jersey-container-jdk-http:2.28'
+
+    // HK2 InjectionManager implementation
+    compile 'org.glassfish.jersey.inject:jersey-hk2:2.28'
+
+    // Provides MessageBodyWriter for media type application/json
+    compile 'org.glassfish.jersey.media:jersey-media-json-binding:2.28'
+
+    // JSON Schema
+    compile 'com.fasterxml.jackson.module:jackson-module-jsonSchema:2.9.8'
+    compile 'org.jsonschema2pojo:jsonschema2pojo-core:1.0.0'
+
+    // RestEasy
+    compile 'org.jboss.resteasy:resteasy-client:3.6.3.Final'
+    compile 'org.jboss.resteasy:resteasy-jackson2-provider:3.6.3.Final'
+    compile 'org.jboss.resteasy:resteasy-jaxb-provider:3.6.3.Final'
+}
+
+apply plugin: 'idea'
+
+idea.module.outputDir file("out/production/classes")
+
+
