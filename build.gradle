@@ -79,6 +79,11 @@ dependencies {
     compile 'org.jboss.resteasy:resteasy-jaxb-provider:3.6.3.Final'
 }
 
+dependencies {
+    compile 'org.glassfish.tyrus:tyrus-client:1.15'
+    compile 'org.glassfish.tyrus:tyrus-container-grizzly-server:1.15'
+}
+
 apply plugin: 'idea'
 
 idea.module.outputDir file("out/production/classes")
