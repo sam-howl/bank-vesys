@@ -12,9 +12,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-@ServerEndpoint("/ws")
+@ServerEndpoint("/bank")
 public class WsServer {
+    static Bank bank;
     public static void main(String[] args) throws Exception {
+        bank = new Bank();
         Server wsServer = new Server("localhost", 12345, "/websockets", null, WsServer.class);
         wsServer.start();
         System.out.println("Server started, press a key to stop the server");
@@ -32,7 +34,29 @@ public class WsServer {
     }
 
     @OnMessage
-    public String onMessage (String message, Session session){
+    public String onMessage (String message, Session session) throws IOException {
+        Account acc;
+        String[] split = message.split(" ");
+        switch (split[0]){
+            case "create" :
+                return bank.createAccount(split[1]);
+            case "get-account":
+                Account account = bank.getAccount(split[1]);
+                if (account == null){
+                    return null;
+                } else {
+                    return account.number + "," + account.owner + "," + account.active + "," + account.balance;
+                }
+            case "get-accountnumbers":
+                Set<String> set = bank.getAccountNumbers();
+                String result = "";
+                for (String number : set){
+                    result += number + ",";
+                }
+                result.substring(0, result.length()-1);
+                return result;
+        }
+
         System.out.println("Received message from " + session.getBasicRemote() + ": " + message);
         return null;
     }
