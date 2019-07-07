@@ -9,3 +9,5 @@ bank.rest.Driver localhost 9998
 bank.rmi.Driver localhost 1099
 
 bank.websockets.Driver localhost 12345
+
+bank.graphql.Driver localhost 8080

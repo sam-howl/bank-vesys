@@ -33,8 +33,15 @@ public class Server extends HttpServlet {
         graphQLServlet = SimpleGraphQLHttpServlet.newBuilder(buildSchema()).build();
     }
 
+    enum Result {
+        OK,
+        INACTIVE,
+        OVERDRAW,
+        ILLEGAL
+    }
+
     private GraphQLSchema buildSchema() {
-        Reader streamReader = new InputStreamReader(Server.class.getResourceAsStream("/bank"));
+        Reader streamReader = new InputStreamReader(Server.class.getResourceAsStream("/bank.graphqls"));
         TypeDefinitionRegistry typeDefinitionRegistry = new SchemaParser().parse(streamReader);
 
         RuntimeWiring wiring = RuntimeWiring.newRuntimeWiring()
@@ -66,8 +73,29 @@ public class Server extends HttpServlet {
                             return null;
                         })
                 )
+                .type(TypeRuntimeWiring.newTypeWiring("Mutation")
+                    .dataFetcher("createAccount", env -> {
+                        try {
+                            return bank.createAccount(env.getArgument("owner"));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        return null;
+                    })
+                    .dataFetcher("deposit", env -> {
+                        try {
+                            bank.getAccount(env.getArgument("number"))
+                                    .deposit(env.getArgument("amount"));
+                            return Result.OK;
+                        } catch (InactiveException e) {
+                            return Result.INACTIVE;
+                        } catch (Exception e) {
+                            return Result.ILLEGAL;
+                        }
+                    })
+                )
                 .build();
-        return new SchemaGenerator().makeExecutableSchema(typeDefinitionRegistry, wiring)
+        return new SchemaGenerator().makeExecutableSchema(typeDefinitionRegistry, wiring);
     }
 
     static class Bank implements bank.Bank{

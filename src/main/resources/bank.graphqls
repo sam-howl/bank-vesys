@@ -1,0 +1,27 @@
+type Account {
+    number: String!
+    owner: String!
+    active: Boolean!
+    balance: Float!
+}
+enum Result {
+    OK
+    INACTIVE
+    OVERDRAW
+    ILLEGAL
+}
+type Query {
+    getAllAccounts: [Account!]!
+    getAccount(number: String!): Account
+}
+type Mutation {
+    createAccount(owner: String!): String
+    closeAccount(number: String!): Boolean!
+    deposit(number: String!, amount: Float!): Result!
+    withdraw(number: String!, amount: Float!): Result!
+    transfer(from: String!, to: String!, amount: Float!): Result!
+}
+schema {
+    query: Query
+    mutation: Mutation
+}
