@@ -34,10 +34,7 @@ public class Server extends HttpServlet {
     }
 
     enum Result {
-        OK,
-        INACTIVE,
-        OVERDRAW,
-        ILLEGAL
+        OK, INACTIVE, OVERDRAW, ILLEGAL
     }
 
     private GraphQLSchema buildSchema() {
